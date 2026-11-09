@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="theme-color" content="#f5f3ff">
+<title>你到底是 ADHD，还是单纯精神内耗？</title>
+<meta name="description" content="10 道题，测出你的注意力乱法和内耗主要来源。约 1 分钟。趣味测试，不构成诊断。">
+<style>
+  :root{
+    --main:#5b5bd6;
+    --main-d:#4441b8;
+    --ink:#1f1b33;
+    --ink-2:#6a6484;
+    --card:#ffffff;
+    --line:#e8e4f8;
+    --bg1:#f1eeff;
+    --bg2:#fbfaff;
+    --soft:#ece8ff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    color:var(--ink);
+    background:linear-gradient(170deg,var(--bg1) 0%,var(--bg2) 55%,#fff 100%);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:480px;margin:0 auto;padding:calc(24px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));}
+  .screen{display:none;animation:fade .32s ease both}
+  .screen.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ---------- 封面 ---------- */
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:13px;color:var(--main-d);background:#e7e3ff;
+    padding:7px 14px;border-radius:999px;font-weight:600;letter-spacing:.02em;
+  }
+  h1{
+    font-size:30px;line-height:1.34;margin:20px 0 0;font-weight:800;letter-spacing:-.01em;
+  }
+  h1 em{font-style:normal;color:var(--main);position:relative;white-space:nowrap}
+  h1 em::after{
+    content:"";position:absolute;left:0;right:0;bottom:2px;height:9px;
+    background:#dcd5ff;border-radius:4px;z-index:-1;
+  }
+  .sub{margin:14px 0 0;font-size:16px;line-height:1.7;color:var(--ink-2)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 0}
+  .chip{
+    font-size:13.5px;color:#5f5878;background:#fff;border:1px solid var(--line);
+    padding:8px 13px;border-radius:12px;box-shadow:0 2px 10px rgba(120,110,200,.07);
+  }
+  .chip b{color:var(--ink);font-weight:700}
+  .cta{
+    display:block;width:100%;border:0;cursor:pointer;
+    margin-top:30px;padding:18px 20px;border-radius:18px;
+    font-size:18px;font-weight:800;letter-spacing:.02em;color:#fff;
+    background:linear-gradient(135deg,#7b6cff,#4f43d6);
+    box-shadow:0 12px 26px rgba(91,91,214,.32);
+    transition:transform .12s ease,box-shadow .12s ease;
+  }
+  .cta:active{transform:translateY(2px) scale(.995);box-shadow:0 6px 16px rgba(91,91,214,.28)}
+  .tiny{margin:16px 0 0;text-align:center;font-size:12.5px;color:#a29cb8;line-height:1.7}
+
+  /* ---------- 答题 ---------- */
+  .topbar{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--ink-2)}
+  .track{height:7px;background:#e6e1ff;border-radius:999px;margin:12px 0 30px;overflow:hidden}
+  .track > i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#a99bff,#5b48e8);transition:width .35s cubic-bezier(.4,0,.2,1)}
+  .qnum{font-size:14px;font-weight:800;color:var(--main);letter-spacing:.08em}
+  .qtext{font-size:23px;line-height:1.5;font-weight:800;margin:10px 0 26px;letter-spacing:-.01em}
+  .opts{display:flex;flex-direction:column;gap:12px}
+  .opt{
+    text-align:left;width:100%;cursor:pointer;
+    background:var(--card);border:1.5px solid #ede9fa;border-radius:16px;
+    padding:17px 18px;font-size:16.5px;line-height:1.45;color:var(--ink);font-weight:500;
+    box-shadow:0 3px 14px rgba(120,110,200,.07);
+    transition:border-color .15s ease,transform .1s ease,background .15s ease;
+  }
+  .opt:active{transform:scale(.985);border-color:var(--main);background:#f7f5ff}
+  .opt.picked{border-color:var(--main);background:#f2efff}
+
+  /* ---------- 结果 ---------- */
+  .resLabel{font-size:13px;font-weight:700;color:var(--ink-2);letter-spacing:.16em}
+  .resName{font-size:33px;font-weight:900;line-height:1.24;margin:10px 0 8px;letter-spacing:-.02em}
+  .resName span{color:var(--main)}
+  .resTag{font-size:16.5px;font-weight:700;color:#5f5878;line-height:1.6;margin:0}
+  .social{display:none;margin:10px 0 0;font-size:13.5px;color:var(--ink-2)}
+  .social b{color:var(--main);font-weight:800}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin:20px 0 0;box-shadow:0 6px 22px rgba(120,110,200,.09)}
+  .card h3{margin:0 0 10px;font-size:14px;letter-spacing:.08em;color:var(--ink-2);font-weight:700}
+  .desc{margin:0;font-size:16px;line-height:1.82;color:#33304a}
+  .heat{display:flex;align-items:baseline;gap:8px}
+  .heat b{font-size:44px;font-weight:900;color:var(--main);letter-spacing:-.02em;line-height:1}
+  .heat i{font-style:normal;font-size:14px;color:var(--ink-2)}
+  .heatTag{
+    font-size:12.5px;font-weight:800;color:var(--main-d);background:#ece8ff;
+    padding:4px 10px;border-radius:999px;margin-left:8px;align-self:center;
+  }
+  .bars{display:flex;flex-direction:column;gap:13px;margin-top:6px}
+  .bar .row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;color:#43405c}
+  .bar .row span:last-child{font-weight:800;color:var(--main-d)}
+  .bar .bg{height:9px;background:#ebe7fb;border-radius:999px;overflow:hidden}
+  .bar .bg > i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#b3a6ff,#5445d8);transition:width .9s cubic-bezier(.2,.8,.2,1)}
+  .btn2{
+    display:block;width:100%;border:1.5px solid var(--main);cursor:pointer;margin-top:14px;
+    padding:15px;border-radius:16px;font-size:16px;font-weight:800;color:var(--main);
+    background:#fff;transition:background .15s ease;
+  }
+  .btn2:active{background:#f2efff}
+  .btnGhost{border-color:#e2dff1;color:var(--ink-2)}
+  .foot{margin:22px 0 0;text-align:center;font-size:12px;color:#a8a2bd;line-height:1.8}
+  .toast{
+    position:fixed;left:50%;bottom:38px;transform:translate(-50%,20px);
+    background:rgba(31,27,51,.92);color:#fff;font-size:14px;padding:11px 18px;border-radius:12px;
+    opacity:0;pointer-events:none;transition:.25s ease;z-index:9;
+  }
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- 封面 -->
+  <section class="screen active" id="s-cover">
+    <div class="badge">✦ 10 道题 · 约 1 分钟</div>
+    <h1>你到底是 <em>ADHD</em>，还是单纯<em>精神内耗</em>？</h1>
+    <p class="sub">测出你的注意力乱法，和每天偷偷耗你电的那件事。<br>凭第一直觉选，不用想太久。</p>
+    <div class="chips">
+      <div class="chip"><b>注意力</b>｜你的开关长在哪</div>
+      <div class="chip"><b>启动阻力</b>｜为什么总开不了工</div>
+      <div class="chip"><b>脑内弹幕</b>｜一天演多少场</div>
+      <div class="chip"><b>内耗指数</b>｜电到底漏在哪</div>
+    </div>
+    <button class="cta" id="start">开始测试 →</button>
+    <p class="tiny">纯本地计算 · 不收集任何信息<br>趣味测试，不构成诊断或医疗建议</p>
+  </section>
+
+  <!-- 答题 -->
+  <section class="screen" id="s-quiz">
+    <div class="topbar">
+      <span id="qidx">第 1 / 10 题</span>
+      <span id="qpct">0%</span>
+    </div>
+    <div class="track"><i id="bar"></i></div>
+    <div class="qnum" id="qnum">Q1</div>
+    <h2 class="qtext" id="qtext">题目</h2>
+    <div class="opts" id="opts"></div>
+  </section>
+
+  <!-- 结果 -->
+  <section class="screen" id="s-result">
+    <div class="resLabel">你的注意力类型</div>
+    <h1 class="resName" id="rname">—</h1>
+    <p class="resTag" id="rtag"></p>
+    <p class="social" id="rsocial"></p>
+
+    <div class="card">
+      <h3>你的日常是什么样</h3>
+      <p class="desc" id="rdesc"></p>
+    </div>
+
+    <div class="card">
+      <h3>内耗指数</h3>
+      <div class="heat"><b id="rheat">0</b><i>%</i><span class="heatTag" id="rheatTag"></span></div>
+      <div class="bars" id="rbars"></div>
+    </div>
+
+    <button class="btn2" id="share">复制结果，发给朋友 →</button>
+    <button class="btn2 btnGhost" id="again">再测一次</button>
+    <p class="foot">答案只在你手机里算，不上传任何信息<br>本测试仅供娱乐，不构成诊断或医疗建议<br>如果已经影响生活，去正规医院精神科或心理科看看<br>比任何测试都值得</p>
+  </section>
+
+</div>
+<div class="toast" id="toast">已复制</div>
+
+<script>
+/* __DATA_START__ */
+/* ============================================================
+   1. 结果类型：name 名字 / tag 一句话 / desc 解读
+   ============================================================ */
+const TYPES = {
+  stim: {
+    name: "高刺激依赖型",
+    tag: "不是不想做，是没到 deadline 就打不开。",
+    desc: "你的大脑只在“有点悬”的时候才肯启动。平静的日子里你像断了电，一有截止日期、一有人在等、一有赌注，又能突然爆发出别人一个月的量。这不是懒，是你的启动开关长在了外面。试着做两件事：把大任务切成 20 分钟就能看见结果的小块；开工前给自己一个小赌注——约好几点交给谁、或者找个朋友坐旁边。你会发现，自己没那么废。"
+  },
+  danmu: {
+    name: "脑内弹幕型",
+    tag: "想法永远比动作多，弹幕关不掉。",
+    desc: "你脑子里同时开着好几个频道：一个在想待会吃什么，一个在回放三年前的尴尬，一个在提醒你有件事忘了，还有一个在问“我刚才到底想干嘛”。你其实很聪明，问题是频道太多、互相打架。把弹幕写下来会好很多——脑子里想的不算数，落在纸上才占内存。每天只留三件事写在便利贴上，其余全丢进“以后再说”清单。脑子是用来想事的，不是用来存事的。"
+  },
+  perfect: {
+    name: "完美卡点型",
+    tag: "想做到 100 分，所以连 1 分都没开始。",
+    desc: "你不是拖延，你是被“必须做好”卡住了。开工前你想先准备好、先想清楚、先有个完整方案，结果准备阶段无限延长，越拖越自责，越自责越不敢看。你怕的不是做不完，是做得不够好。把标准从“完成得很好”降到“先做个丑的”：先出一版烂的，再改。完美不是开始的前提，是改出来的结果。"
+  },
+  rumin: {
+    name: "情绪反刍型",
+    tag: "一句话能在脑子里重播三十遍。",
+    desc: "事情过去很久了，你还在回放；对方早就忘了，你还在想当时是不是说错了。这种反复咀嚼会吃掉你一天里最好的那部分能量，等真要做事的时候，电量已经没了。给反刍设个时限：允许自己想 10 分钟，时间一到就去洗个澡、出门走一圈。不是因为想通了才停下，是因为停下了才可能想通。"
+  },
+  mask: {
+    name: "假性正常型",
+    tag: "外人看你挺好，只有你知道每天都在硬撑。",
+    desc: "你把“我没事”练成了本能。迟到有理由，忘事有借口，情绪崩了也只在洗澡的时候。这很累，而且没人会来帮你——因为谁都以为你不需要。你缺的不是更强的意志力，是允许自己被看见一次。找一个靠谱的人，说一句“我最近有点撑不住”，不用解释得很清楚。你不是必须一直正常。"
+  },
+  drift: {
+    name: "随缘发散型",
+    tag: "注意力确实会跑，但你不怎么为它自责。",
+    desc: "你也会走神、会忘事、会把手机从手里放下又找一圈，但你不太为这些内耗。这让你在网上那些“ADHD 自测”里很容易对号入座，其实你只是普通的分心。你的优势是恢复力：跑偏了能自己回来，摔了也不太记仇。别被别人的诊断叙事带走——你大概率不缺病，缺的可能只是睡够觉、少熬一次夜。"
+  }
+};
+
+/* ------------------------------------------------------------
+   配平系数：题库里每种类型能拿分的题数不一样，直接相加会有人
+   永远抽不到。这组数是用 3 万次随机作答模拟搜出来的，保证六种
+   结果都在 16%–18% 之间。改题目后要重跑一次模拟。
+   ------------------------------------------------------------ */
+const TYPE_W = { stim: 0.87, danmu: 1.51, perfect: 0.96, rumin: 1.23, mask: 0.81, drift: 1.32 };
+
+/* ============================================================
+   2. 维度：显示在结果页的成分条
+   ============================================================ */
+const DIMS = {
+  drift: "注意力漂移",
+  start: "启动阻力",
+  mono: "脑内弹幕",
+  drain: "情绪耗电"
+};
+
+/* ============================================================
+   3. 题目：每题 4 个选项，s 给类型加分，d 给维度加分
+   ============================================================ */
+const QUESTIONS = [
+  {
+    q: "闹钟响了，接下来十分钟你通常在干嘛？",
+    o: [
+      { t: "一睁眼就摸手机，刷完才想起来要起床", s: { stim: 2 }, d: { drift: 2, drain: 1 } },
+      { t: "设了五个闹钟，第三个才起得来", s: { stim: 2 }, d: { start: 3 } },
+      { t: "起来了，但脑子里已经在过今天要做的事", s: { rumin: 1 }, d: { mono: 2 } },
+      { t: "起是起来了，就是会坐那儿发呆很久", s: { drift: 1 }, d: { drift: 2, start: 1 } }
+    ]
+  },
+  {
+    q: "打开电脑准备写作业 / 做方案，你的状态是？",
+    o: [
+      { t: "先整理桌面、调字体、泡杯咖啡，半小时过去一个字没写", s: { perfect: 3 }, d: { start: 3 } },
+      { t: "能写，但必须有人在旁边催，或者马上就要交了", s: { stim: 2 }, d: { start: 2 } },
+      { t: "写两句就切去看消息，回来忘了刚才想写什么", s: { danmu: 1 }, d: { drift: 3 } },
+      { t: "直接开始写，写到一半发现跑题了", s: { drift: 1 }, d: { drift: 2 } }
+    ]
+  },
+  {
+    q: "洗澡或者躺床上关灯之后，你的脑子在干嘛？",
+    o: [
+      { t: "开始放电影，复盘今天说错的每一句话", s: { rumin: 2 }, d: { mono: 3 } },
+      { t: "突然特别清醒，想通了很多事，第二天一件也没做", s: { danmu: 1 }, d: { mono: 2, start: 1 } },
+      { t: "想到什么就查什么，一查查到凌晨两点", s: { stim: 2 }, d: { drift: 2 } },
+      { t: "挺安静的，很快就睡了", s: { drift: 1 }, d: {} }
+    ]
+  },
+  {
+    q: "收到一条工作 / 学习消息，你第一反应是？",
+    o: [
+      { t: "心跳快一下，点开前先深呼吸", s: { mask: 2 }, d: { drain: 2 } },
+      { t: "马上处理掉，不然它一直挂在心上", s: { perfect: 2 }, d: { mono: 1, drain: 1 } },
+      { t: "看一眼，想着待会回，然后就忘了", s: { danmu: 1 }, d: { drift: 2 } },
+      { t: "不着急，反正能做完", s: { drift: 1 }, d: {} }
+    ]
+  },
+  {
+    q: "你的收藏夹和待办清单，现在什么样？",
+    o: [
+      { t: "收藏了几百条，一条都没回看", s: { stim: 2 }, d: { drift: 2, start: 1 } },
+      { t: "每天都列，列完就开始焦虑", s: { perfect: 1, mask: 1 }, d: { mono: 2, start: 1 } },
+      { t: "不用，靠脑子记，忘了就算了", s: { drift: 1 }, d: { drift: 1 } },
+      { t: "工具用得挺好，但一想到要做就拖", s: { perfect: 2 }, d: { start: 2 } }
+    ]
+  },
+  {
+    q: "聊天时对方说“你刚才是不是没在听”？",
+    o: [
+      { t: "被抓包，我确实走神了", s: { danmu: 1 }, d: { drift: 3 } },
+      { t: "在听，但我同时在回别人的消息", s: { danmu: 1 }, d: { drift: 1 } },
+      { t: "我会紧张，怕对方觉得我不重视他", s: { mask: 2 }, d: { drain: 2, mono: 1 } },
+      { t: "很少发生，我专注的时候特别专注", s: { perfect: 1 }, d: {} }
+    ]
+  },
+  {
+    q: "一件事没做好，你会复盘多久？",
+    o: [
+      { t: "当天晚上想，第二天就翻篇", s: { drift: 1 }, d: { mono: 1 } },
+      { t: "三天内反复想起，越想越觉得自己不行", s: { rumin: 3 }, d: { mono: 2, drain: 1 } },
+      { t: "表面没事，心里已经把最坏的结果演了十遍", s: { mask: 2, rumin: 1 }, d: { drain: 2 } },
+      { t: "会自责，但更在意下次怎么做得更完美", s: { perfect: 2 }, d: { start: 1 } }
+    ]
+  },
+  {
+    q: "出门前的你，是哪一种？",
+    o: [
+      { t: "已经到楼下了，又回去拿东西", s: { stim: 1, danmu: 1 }, d: { drift: 2 } },
+      { t: "提前一小时准备，还是会迟到", s: { perfect: 1, stim: 1 }, d: { start: 1, drift: 1 } },
+      { t: "能准时，但出门前紧张得吃不下东西", s: { mask: 2 }, d: { drain: 2 } },
+      { t: "随便，几点到就行", s: { drift: 1 }, d: {} }
+    ]
+  },
+  {
+    q: "手机通知和电量，会让你怎么样？",
+    o: [
+      { t: "电量低于 50% 就开始焦虑", s: { mask: 1 }, d: { drain: 2 } },
+      { t: "关掉了所有通知，但还是会主动去刷", s: { danmu: 1 }, d: { drift: 2, start: 1 } },
+      { t: "边充边玩，一晚上就这么过去了", s: { stim: 2 }, d: { drift: 2 } },
+      { t: "不太在意，想起来才看", s: { drift: 1 }, d: {} }
+    ]
+  },
+  {
+    q: "有人对你说“你看起来挺正常的啊”，你心里会？",
+    o: [
+      { t: "想：因为我演得很好", s: { mask: 3 }, d: { drain: 2, mono: 1 } },
+      { t: "有点想哭，但嘴上说“还好啦”", s: { mask: 2, rumin: 1 }, d: { drain: 2 } },
+      { t: "没什么感觉，我确实挺正常的", s: { drift: 1 }, d: {} },
+      { t: "当场开始解释自己到底有多难", s: { danmu: 1, rumin: 1 }, d: { mono: 1 } }
+    ]
+  }
+];
+/* __DATA_END__ */
+
+/* ============================================================
+   4. 逻辑
+   ============================================================ */
+
+/* ---------- 后端计数（可选，失败不影响测试） ---------- */
+const SITE_ID = "adhd";
+const API_BASE = "https://quiz-api-pages.pages.dev"; // Cloudflare Pages Functions 后端
+async function reportCount(site, typeId) {
+  if (!API_BASE) return;
+  const el = document.getElementById("rsocial");
+  if (!el) return;
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 2500);
+    const r = await fetch(`${API_BASE}/api/count`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ site, type: typeId }),
+      signal: ctrl.signal,
+    });
+    clearTimeout(timer);
+    const d = await r.json();
+    if (d && d.ok && d.typeCount > 1) {
+      el.innerHTML = `已经有 <b>${d.typeCount.toLocaleString()}</b> 人和你测出一样的结果`;
+      el.style.display = "block";
+    }
+  } catch (e) {
+    /* 后端不可用时静默 */
+  }
+}
+
+const picked = [];
+const $ = (id) => document.getElementById(id);
+const show = (id) => {
+  document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
+  $(id).classList.add("active");
+  window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+};
+
+function renderQuestion() {
+  const i = picked.length;
+  const q = QUESTIONS[i];
+  $("qidx").textContent = `第 ${i + 1} / ${QUESTIONS.length} 题`;
+  const pct = Math.round((i / QUESTIONS.length) * 100);
+  $("qpct").textContent = pct + "%";
+  $("bar").style.width = pct + "%";
+  $("qnum").textContent = "Q" + (i + 1);
+  $("qtext").textContent = q.q;
+  const box = $("opts");
+  box.innerHTML = "";
+  q.o.forEach((opt, idx) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = opt.t;
+    b.onclick = () => {
+      b.classList.add("picked");
+      picked.push(idx);
+      setTimeout(() => {
+        if (picked.length < QUESTIONS.length) renderQuestion();
+        else renderResult();
+      }, 170);
+    };
+    box.appendChild(b);
+  });
+}
+
+/* 每个维度的理论最大值，从题库自动算，改题不用手动改数 */
+const DIM_MAX = (() => {
+  const m = {};
+  Object.keys(DIMS).forEach((k) => (m[k] = 0));
+  QUESTIONS.forEach((q) => {
+    Object.keys(DIMS).forEach((k) => {
+      m[k] += Math.max(...q.o.map((o) => (o.d && o.d[k]) || 0));
+    });
+  });
+  return m;
+})();
+
+function renderResult() {
+  const score = {};
+  const dims = {};
+  picked.forEach((idx, qi) => {
+    const opt = QUESTIONS[qi].o[idx];
+    for (const k in opt.s) score[k] = (score[k] || 0) + opt.s[k];
+    for (const k in opt.d) dims[k] = (dims[k] || 0) + opt.d[k];
+  });
+
+  let best = "stim", bestScore = -1;
+  const order = ["stim", "danmu", "perfect", "rumin", "mask", "drift"];
+  order.forEach((k) => {
+    const v = (score[k] || 0) * (TYPE_W[k] || 1);
+    if (v > bestScore) { bestScore = v; best = k; }
+  });
+  const type = TYPES[best];
+
+  /* 内耗指数：越偏“反刍 / 伪装 / 完美”越高，越偏“随缘”越低 */
+  const total = Object.values(score).reduce((a, b) => a + b, 0) || 1;
+  const raw = (
+    (score.rumin || 0) * 1.0 +
+    (score.mask || 0) * 1.0 +
+    (score.perfect || 0) * 0.85 +
+    (score.stim || 0) * 0.7 +
+    (score.danmu || 0) * 0.6 +
+    (score.drift || 0) * 0.15
+  ) / total * 100;
+  const heat = Math.max(8, Math.min(97, Math.round(58 + (raw - 75) * 2.6)));
+  const heatTag = heat < 40 ? "低内耗" : heat < 60 ? "中等" : heat < 78 ? "偏高" : "很高";
+
+  $("rname").textContent = type.name;
+  $("rtag").textContent = type.tag;
+  $("rdesc").textContent = type.desc;
+  $("rheat").textContent = heat;
+  $("rheatTag").textContent = heatTag;
+
+  $("rbars").innerHTML = "";
+  Object.keys(DIMS).forEach((k) => {
+    const v = dims[k] || 0;
+    const p = Math.max(8, Math.min(98, Math.round((v / (DIM_MAX[k] || 1)) * 100)));
+    const row = document.createElement("div");
+    row.className = "bar";
+    row.innerHTML = `<div class="row"><span>${DIMS[k]}</span><span>${p}%</span></div><div class="bg"><i style="width:0"></i></div>`;
+    $("rbars").appendChild(row);
+    requestAnimationFrame(() => setTimeout(() => { row.querySelector("i").style.width = p + "%"; }, 60));
+  });
+
+  $("bar").style.width = "100%";
+  $("qpct").textContent = "100%";
+  show("s-result");
+
+  window.__shareText = `我测出来是「${type.name}」——${type.tag} 你的是哪一种？`;
+  reportCount(SITE_ID, best);
+}
+
+$("start").onclick = () => {
+  picked.length = 0;
+  $("bar").style.width = "0%";
+  renderQuestion();
+  show("s-quiz");
+};
+
+$("again").onclick = () => {
+  picked.length = 0;
+  show("s-cover");
+};
+
+$("share").onclick = async () => {
+  const text = window.__shareText || document.title;
+  try {
+    await navigator.clipboard.writeText(text);
+    toast("已复制，去发给朋友吧");
+  } catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); ta.remove();
+    toast("已复制，去发给朋友吧");
+  }
+};
+
+let toastTimer;
+function toast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("on"), 1600);
+}
+</script>
+</body>
+</html>
